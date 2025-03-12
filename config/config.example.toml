@@ -6,6 +6,11 @@ api_key = "sk-..."
 max_tokens = 4096
 temperature = 0.0
 
+[llm.deepseek]
+model = "deepseek-chat"
+base_url = "https://api.deepseek.com/v1"
+api_key = "ds-..."
+
 # [llm] #AZURE OPENAI:
 # api_type= 'azure'
 # model = "YOUR_MODEL_NAME" #"gpt-4o-mini"

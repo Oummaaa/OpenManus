@@ -1,4 +1,6 @@
+/* Configuration des variables CSS */
 :root {
+    /* Thème clair */
     --primary-color: #007bff;
     --primary-hover: #0056b3;
     --success-color: #28a745;
@@ -9,79 +11,188 @@
     --text-light: #666;
     --bg-color: #f8f9fa;
     --border-color: #ddd;
+    --card-bg: #ffffff;
+    --shadow-color: rgba(0,0,0,0.1);
+    
+    /* Thème sombre */
+    --dark-primary: #0d6efd;
+    --dark-success: #198754;
+    --dark-error: #dc3545;
+    --dark-warning: #ffc107;
+    --dark-info: #0dcaf0;
+    --dark-text: #e9ecef;
+    --dark-text-light: #adb5bd;
+    --dark-bg: #212529;
+    --dark-border: #495057;
+    --dark-card-bg: #343a40;
+    --dark-shadow: rgba(0,0,0,0.25);
+    
+    /* Animations optimisées */
+    --transition-speed: 0.3s;
+    --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Nouvelles variables pour les couleurs de fond avec opacité */
+    --info-color-light: rgba(33, 150, 243, 0.1);
+    --warning-color-light: rgba(255, 152, 0, 0.1);
+    --success-color-light: rgba(40, 167, 69, 0.1);
+    --error-color-light: rgba(220, 53, 69, 0.1);
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+/* Optimisations de performance */
+@layer base {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Préchargement des polices */
+    @font-face {
+        font-family: 'PingFang SC';
+        font-display: swap;
+    }
+
+    /* Optimisation du rendu */
+    html {
+        text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    /* Amélioration des performances de défilement */
+    body {
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
 }
 
+/* Thème sombre avec optimisation des transitions */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, var(--dark-bg) 0%, #1a1d20 100%);
+        color: var(--dark-text);
+    }
+    
+    .card {
+        background-color: var(--dark-card-bg);
+        box-shadow: 0 4px 12px var(--dark-shadow);
+    }
+    
+    #prompt-input {
+        background: var(--dark-card-bg);
+        border-color: var(--dark-border);
+        color: var(--dark-text);
+    }
+    
+    button {
+        background-color: var(--dark-primary);
+    }
+    
+    .task-item {
+        background-color: var(--dark-card-bg);
+        color: var(--dark-text);
+    }
+    
+    .task-item:hover {
+        background-color: var(--dark-border);
+    }
+}
+
+/* Styles de base optimisés */
 body {
-    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    font-family: 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
     margin: 0;
-    padding: 0;
-    background-color: var(--bg-color);
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
     color: var(--text-color);
+    scroll-behavior: smooth;
+    min-height: 100vh;
+    text-rendering: optimizeLegibility;
 }
 
+/* Layout conteneur principal avec grid */
 .container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
     min-height: 100vh;
-    width: 90%;
+    width: min(95%, 1600px);
     margin: 0 auto;
     padding: 20px;
-    gap: 20px;
 }
 
+/* Media queries optimisés */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .history-panel {
+        width: 100%;
+        max-height: 200px;
+    }
+}
+
+/* Composants optimisés avec will-change */
 .card {
-    background-color: white;
-    border-radius: 8px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transition: transform var(--transition-speed) var(--transition-timing),
+                box-shadow var(--transition-speed) var(--transition-timing);
+    will-change: transform, box-shadow;
 }
 
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--shadow-color);
+}
+
+/* Panneaux principaux */
 .history-panel {
     width: 300px;
 }
 
 .main-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
     gap: 20px;
 }
 
+/* Liste des tâches avec virtualisation */
 .task-list {
     margin-top: 10px;
     max-height: calc(100vh - 160px);
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scroll-snap-type: y proximity;
 }
 
+/* Conteneur de tâches optimisé */
 .task-container {
-    @extend .card;
-    width: 100%;
     position: relative;
     min-height: 300px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    place-items: center;
     padding: 20px;
     overflow: auto;
     height: 100%;
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow-color);
 }
 
+/* Message de bienvenue */
 .welcome-message {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    place-items: center;
     text-align: center;
     color: var(--text-light);
     background: white;
-    z-index: 1;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -90,51 +201,88 @@ body {
 }
 
 .welcome-message h1 {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 4vw, 2rem);
     margin-bottom: 10px;
     color: var(--text-color);
 }
 
+/* Conteneur d'entrée optimisé */
 .input-container {
-    @extend .card;
     display: flex;
     gap: 10px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 #prompt-input {
     flex: 1;
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     font-size: 1rem;
+    background: var(--bg-color);
 }
 
+/* Boutons avec effet ripple optimisé */
 button {
     padding: 12px 24px;
     background-color: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
-    transition: background-color 0.2s;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    transition: background-color var(--transition-speed) var(--transition-timing);
+    will-change: transform, opacity;
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    will-change: transform, opacity;
+}
+
+@keyframes ripple {
+    to {
+        transform: translate(-50%, -50%) scale(100);
+        opacity: 0;
+    }
+}
+
+button:active::after {
+    animation: ripple 0.8s ease-out;
 }
 
 button:hover {
     background-color: var(--primary-hover);
 }
 
+/* Items de tâche optimisés */
 .task-item {
     padding: 10px;
     margin-bottom: 10px;
-    background-color: #f8f9fa;
+    background-color: var(--bg-color);
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color var(--transition-speed) var(--transition-timing);
+    scroll-snap-align: start;
 }
 
 .task-item:hover {
-    background-color: #e9ecef;
+    background-color: var(--border-color);
 }
 
 .task-item.active {
@@ -142,89 +290,75 @@ button:hover {
     color: white;
 }
 
+/* Conteneur d'entrée en bas */
 #input-container.bottom {
     margin-top: auto;
 }
 
+/* Carte de tâche avec animation optimisée */
 .task-card {
-    background: #fff;
+    background: var(--card-bg);
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: transform var(--transition-speed) var(--transition-timing),
+                box-shadow var(--transition-speed) var(--transition-timing);
+    will-change: transform;
 }
 
 .task-card:hover {
     transform: translateX(5px);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px var(--shadow-color);
 }
 
-.status-pending {
-    color: var(--text-light);
-}
+/* États de statut */
+.status-pending { color: var(--text-light); }
+.status-running { color: var(--primary-color); }
+.status-completed { color: var(--success-color); }
+.status-failed { color: var(--error-color); }
 
-.status-running {
-    color: var(--primary-color);
-}
-
-.status-completed {
-    color: var(--success-color);
-}
-
-.status-failed {
-    color: var(--error-color);
-}
-
+/* Conteneur d'étapes avec défilement optimisé */
 .step-container {
     display: block;
     padding: 15px;
     width: 100%;
     max-height: calc(100vh - 300px);
-    overflow-y: auto;
+    overflow: auto;
+    overscroll-behavior: contain;
 }
 
+/* Item d'étape avec animation optimisée */
 .step-item {
-    padding: 15px;
-    background: white;
-    border-radius: 8px;
+    padding: 20px;
+    background: var(--card-bg);
+    border-radius: 12px;
     width: 100%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-bottom: 10px;
-    opacity: 1;
-    transform: none;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    margin-bottom: 15px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideIn 0.5s var(--transition-timing) forwards;
+    will-change: transform, opacity;
 }
 
-.step-item .log-line:not(.result) {
-    opacity: 0.7;
-    color: #666;
-    font-size: 0.9em;
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.step-item .log-line.result {
-    opacity: 1;
-    color: #333;
-    font-size: 1em;
-    background: #e8f5e9;
-    border-left: 4px solid #4caf50;
-    padding: 10px;
-    border-radius: 4px;
-}
-
-.step-item.show {
-    opacity: 1;
-    transform: none;
-}
-
+/* Styles de ligne de log optimisés */
 .log-line {
     padding: 10px;
     border-radius: 4px;
     margin-bottom: 10px;
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 4px;
 }
 
+/* Variantes de log avec couleurs optimisées */
 .log-line.think,
 .step-item pre.think {
     background: var(--info-color-light);
@@ -255,19 +389,15 @@ button:hover {
     border-left: 4px solid var(--text-light);
 }
 
-/* 删除重复的样式定义 */
-
+/* Préfixe de log */
 .log-prefix {
-    font-weight: bold;
+    font-weight: 600;
     margin-bottom: 5px;
-    color: #666;
+    color: var(--text-light);
 }
 
+/* Styles pre optimisés */
 .step-item pre {
-    padding: 10px;
-    border-radius: 4px;
-    margin: 10px 0;
-    overflow-x: auto;
     padding: 10px;
     border-radius: 4px;
     margin: 10px 0;
@@ -278,61 +408,78 @@ button:hover {
     white-space: pre-wrap;
     color: var(--text-color);
     background: var(--bg-color);
-
-    &.log {
-        background: var(--bg-color);
-        border-left: 4px solid var(--text-light);
-    }
-    &.think {
-        background: var(--info-color-light);
-        border-left: 4px solid var(--info-color);
-    }
-    &.tool {
-        background: var(--warning-color-light);
-        border-left: 4px solid var(--warning-color);
-    }
-    &.result {
-        background: var(--success-color-light);
-        border-left: 4px solid var(--success-color);
-    }
+    -webkit-overflow-scrolling: touch;
 }
 
-.step-item strong {
-    display: block;
-    margin-bottom: 8px;
-    color: #007bff;
-    font-size: 0.9em;
+/* Bouton de basculement de l'historique */
+.history-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 100;
+    transition: transform var(--transition-speed) var(--transition-timing),
+                background-color var(--transition-speed) var(--transition-timing);
+    will-change: transform;
 }
 
-.step-item div {
-    color: #444;
-    line-height: 1.6;
+.history-toggle:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
 }
 
-.loading {
-    padding: 15px;
-    color: #666;
-    text-align: center;
+.history-toggle.active {
+    background-color: var(--primary-hover);
 }
 
+/* États et messages */
+.loading,
 .ping {
-    color: #ccc;
+    padding: 15px;
     text-align: center;
-    margin: 5px 0;
+    color: var(--text-light);
+}
+
+.error,
+.complete {
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
 }
 
 .error {
-    color: #dc3545;
-    padding: 10px;
-    background: #ffe6e6;
-    border-radius: 4px;
-    margin: 10px 0;
+    color: var(--error-color);
+    background: var(--error-color-light);
 }
 
 .complete {
-    color: #28a745;
-    padding: 10px;
-    background: #e6ffe6;
-    border-radius: 4px;
-    margin: 10px 0;
+    color: var(--success-color);
+    background: var(--success-color-light);
+}
+
+/* Optimisations pour le rendu */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Optimisations pour l'impression */
+@media print {
+    .card {
+        box-shadow: none !important;
+    }
+    
+    button,
+    .input-container {
+        display: none !important;
+    }
 }

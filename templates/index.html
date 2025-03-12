@@ -27,10 +27,11 @@
                     type="text"
                     id="prompt-input"
                     placeholder="Enter task prompt..."
-                    onkeypress="if(event.keyCode === 13) createTask()"
                 >
-                <button onclick="createTask()">Create Task</button>
+                <button id="create-task-btn">Create Task</button>
+                <button id="clear-btn">Clear</button>
             </div>
+            <button id="history-toggle" class="history-toggle">Toggle History</button>
         </div>
     </div>
 

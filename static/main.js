@@ -53,6 +53,7 @@ function setupSSE(taskId) {
     function connect() {
         const eventSource = new EventSource(`/tasks/${taskId}/events`);
         currentEventSource = eventSource;
+        let isTaskComplete = false;
 
         const container = document.getElementById('task-container');
 
@@ -393,8 +394,6 @@ function setupSSE(taskId) {
                 console.error('Message handling failed:', e);
             }
         });
-
-        let isTaskComplete = false;
 
         eventSource.addEventListener('complete', (event) => {
             isTaskComplete = true;

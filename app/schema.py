@@ -99,13 +99,52 @@ class Message(BaseModel):
             content: Optional message content
         """
         formatted_calls = [
-            {"id": call.id, "function": call.function.model_dump(), "type": "function"}
+            {
+                "id": call.id,
+                "function": (
+                    call.function.model_dump()
+                    if hasattr(call.function, 'model_dump')
+                    else call.function.dict()
+                    if hasattr(call.function, 'dict')
+                    else call.function
+                    if isinstance(call.function, dict)
+                    else {'name': str(getattr(call.function, 'name', '')), 'arguments': str(getattr(call.function, 'arguments', ''))}
+                    if hasattr(call.function, 'name') or hasattr(call.function, 'arguments')
+                    else {'name': '', 'arguments': str(call.function) if call.function else ''}
+                ),
+                "type": "function"
+            }
             for call in tool_calls
         ]
         return cls(
             role="assistant", content=content, tool_calls=formatted_calls, **kwargs
         )
 
+
+class Task(BaseModel):
+    id: str
+    description: str
+    status: str
+    created_at: float
+    updated_at: float
+    model: Any
+
+    def model_dump(self, *args, **kwargs):
+        """Sérialisation personnalisée avec gestion des objets imbriqués"""
+        model_data = self.model
+        if isinstance(model_data, BaseModel):
+            model_data = model_data.model_dump()
+        elif hasattr(model_data, 'model_dump') and callable(model_data.model_dump):
+            model_data = model_data.model_dump()
+            
+        return {
+            'id': self.id,
+            'description': self.description,
+            'status': self.status,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+            'model': model_data
+        }
 
 class Memory(BaseModel):
     messages: List[Message] = Field(default_factory=list)

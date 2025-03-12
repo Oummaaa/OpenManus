@@ -32,8 +32,13 @@ class Task(BaseModel):
     steps: list = []
 
     def model_dump(self, *args, **kwargs):
-        data = super().model_dump(*args, **kwargs)
-        data["created_at"] = self.created_at.isoformat()
+        data = {
+            "id": self.id,
+            "prompt": self.prompt,
+            "created_at": self.created_at.isoformat(),
+            "status": self.status,
+            "steps": self.steps
+        }
         return data
 
 
@@ -231,7 +236,8 @@ async def get_tasks():
 async def get_task(task_id: str):
     if task_id not in task_manager.tasks:
         raise HTTPException(status_code=404, detail="Task not found")
-    return task_manager.tasks[task_id]
+    task = task_manager.tasks[task_id]
+    return task.model_dump()
 
 
 @app.exception_handler(Exception)
@@ -243,5 +249,10 @@ async def generic_exception_handler(request: Request, exc: Exception):
 
 if __name__ == "__main__":
     import uvicorn
-
-    uvicorn.run(app, host="localhost", port=5172)
+    import argparse
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port', type=int, default=5172, help='Port to run the server on')
+    args = parser.parse_args()
+    
+    uvicorn.run(app, host="localhost", port=args.port)

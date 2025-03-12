@@ -1,0 +1,58 @@
+# Configuration globale LLM
+[llm]
+api_type = "deepseek"
+model = "deepseek-chat"
+base_url = "https://api.deepseek.com/v1"
+api_key = "sk-134022589cb44acea1e29bfd6600c11d"
+max_tokens = 4096
+temperature = 0.7 # Augmenté pour plus de créativité
+request_timeout = 30 # Timeout en secondes
+
+# Configuration avancée du cache et des performances
+[llm.cache]
+enabled = true
+max_size = 2000 # Augmenté pour plus de capacité
+ttl = 7200 # Augmenté à 2 heures pour réduire les rechargements
+compression_level = 7 # Niveau de compression optimisé
+persistent = true
+lru_cache_size = 200 # Augmenté pour améliorer les hits
+cleanup_interval = 600 # Augmenté pour réduire la charge système
+max_memory_usage = 0.85 # Légèrement augmenté
+repair_on_corruption = true
+
+[llm.metrics]
+enabled = true
+retention_days = 14 # Augmenté pour meilleure analyse
+system_interval = 2 # Ajusté pour réduire la charge
+max_points = 7200 # Doublé pour plus de données
+alert_cpu_threshold = 85 # Ajusté selon l'utilisation
+alert_memory_threshold = 90 # Ajusté selon l'utilisation
+
+[llm.monitoring]
+enabled = true
+
+[llm.performance]
+request_timeout = 45 # Augmenté pour les requêtes complexes
+max_requests_per_minute = 80 # Augmenté selon capacité
+retry_attempts = 8 # Plus de tentatives
+retry_min_wait = 2 # Ajusté pour meilleure stabilité
+retry_max_wait = 90 # Augmenté pour cas extrêmes
+parallel_requests = true
+max_parallel_requests = 8 # Augmenté pour plus de parallélisme
+request_queue_size = 200 # Doublé pour plus de capacité
+
+
+# [llm] #AZURE OPENAI:
+# api_type= 'azure'
+# model = "YOUR_MODEL_NAME" #"gpt-4o-mini"
+# base_url = "{YOUR_AZURE_ENDPOINT.rstrip('/')}/openai/deployments/{AZURE_DEPOLYMENT_ID}"
+# api_key = "AZURE API KEY"
+# max_tokens = 8096
+# temperature = 0.0
+# api_version="AZURE API VERSION" #"2024-08-01-preview"
+
+# Optional configuration for specific LLM models
+[llm.vision]
+model = "claude-3-5-sonnet"
+base_url = "https://api.openai.com/v1"
+api_key = "sk-..."
